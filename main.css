@@ -1,0 +1,86 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+#map{
+    height: 800px;
+}
+
+.container{
+    max-width: 1140px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+}
+
+.map__wrapper{
+    background-color: #494A57;
+    display: flex;
+    justify-content: space-around;
+}
+
+.form__title{
+    color: #fff;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.form__legend{
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.form__input{
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+
+
+.pins__ul li{
+    display: flex;
+}
+
+.pins__title{
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+    margin-right: 6px;
+}
+
+.pins__title::before{
+    content: "•";
+    padding-right: 5px;
+    color: #fff;
+}
+
+.pins__delete::before{
+    content: "X";
+    color: #fff;
+}
+
+.myposition__title{
+    color: #fff;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.myposition__info{
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.myposition{
+    display: flex;
+    flex-direction: column;
+}
