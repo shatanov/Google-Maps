@@ -7,9 +7,7 @@ const markerTitle = document.querySelector("#markerTitle");
 const markerDescription = document.querySelector("#markerDescription");
 const markerBtn = document.querySelector("#markerBtn");
 
-
-const markersAll = [];
-const clientMarkers = [];
+let markersAll = [];
 
 
 
@@ -30,18 +28,14 @@ function addPin(marker){
 
     pinTitle.textContent = marker.name;
 
+    pinTitle.appendChild(pinDelete);
     pin.appendChild(pinTitle);
-    pin.appendChild(pinDelete);
     pins.appendChild(pin)
-
-    deletePin(pinDelete, marker)
 }
 
-function deletePin(pinDelete, marker){
-  pinDelete.addEventListener("click", () => {
-    marker.clientMarker.setMap(null);
-  });
-};
+
+
+
 
 
 
@@ -276,7 +270,6 @@ function initMap(position){
 
 
       markersAll.push(marker);
-      clientMarkers.push(clientMarker);
 
       showMarker(markersAll);
       addPin(marker);
@@ -286,26 +279,42 @@ function initMap(position){
     
     function showMarker(markers) {
       for(let i = 0; i < markers.length; i++){
-        clientMarkers[i] = new google.maps.Marker({
+        markers[i].clientMarker = new google.maps.Marker({
             position: new google.maps.LatLng(markers[i].lat,  markers[i].lng),
             map: map,
             title: markers[i].name,
             icon: "markers/marker.svg"
           });
-          addWindow(markers[i], clientMarkers[i]);
-          markers[i].clientMarker = clientMarkers[i];
+          addWindow(markers[i]);
       }
     };
 
-    function addWindow(marker, clientMarker){
+    function addWindow(marker){
       const content = `<h3>${marker.name}</h3><p>${marker.descrp}</p>`
       const infoWindow = new google.maps.InfoWindow({
         content: content
       });
-      google.maps.event.addListener(clientMarker, 'click', function() {
-        infoWindow.open(map,clientMarker);
+      google.maps.event.addListener(marker.clientMarker, 'click', function() {
+        infoWindow.open(map,marker.clientMarker);
       });
     };
+
+    pins.addEventListener("click", (e) => {
+      const btn = e.target.closest(".pins__delete");
+      if (!btn) {
+        return;
+      }
+      markersAll.forEach(e => {
+        if(e.name === btn.parentElement.innerText){
+          console.log('====================================');
+          console.log(e);
+          console.log('====================================');
+          e.clientMarker.setMap(null);
+          markersAll = markersAll.filter(el => el != e);
+          btn.parentElement.remove();
+        }
+      })
+    })
 
 }
 
