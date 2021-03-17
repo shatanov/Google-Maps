@@ -8,7 +8,7 @@ const markerDescription = document.querySelector("#markerDescription");
 const markerBtn = document.querySelector("#markerBtn");
 
 let markersAll = [];
-
+let markerReplay = false;
 
 
 function clearInput(){
@@ -16,6 +16,17 @@ function clearInput(){
   lng.value = "";
   markerTitle.value = "";
   markerDescription.value = "";
+}
+
+function checkReplay(){
+  markersAll.forEach(e => {
+    if(e.name === markerTitle.value || (e.lat === lat.value && e.lng === lng.value)){
+      markerReplay = true;
+    } else {
+      markerReplay = false;
+    }
+  })
+
 }
 
 function addPin(marker){
@@ -33,18 +44,14 @@ function addPin(marker){
     pins.appendChild(pin)
 }
 
-
-
-
-
-
-
-
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(initMap)
 } else {
   alert("Геолокация не доступна")
 };
+
+
+
 
 function initMap(position){
     const clientLat = position.coords.latitude;
@@ -257,35 +264,34 @@ function initMap(position){
         title: "",
         icon: "markers/marker.svg"
       });
-
-      const marker = {
-        "name": markerTitle.value, 
-        "lat": lat.value, 
-        "lng": lng.value, 
-        "descrp": markerDescription.value,
-        "is_exact": true,
-        "clientMarker": clientMarker
-      };
-
-
-
-      markersAll.push(marker);
-
-      showMarker(markersAll);
-      addPin(marker);
-
-      clearInput();
+      checkReplay();
+      if(!markerReplay){
+        const marker = {
+          "name": markerTitle.value, 
+          "lat": lat.value, 
+          "lng": lng.value, 
+          "descrp": markerDescription.value,
+          "is_exact": true,
+          "clientMarker": clientMarker
+        };
+        markersAll.push(marker);
+        addPin(marker)
+        showMarker();
+        clearInput();
+      }else{
+        alert("Такой маркер уже добавлен")
+      }
     });
     
-    function showMarker(markers) {
-      for(let i = 0; i < markers.length; i++){
-        markers[i].clientMarker = new google.maps.Marker({
-            position: new google.maps.LatLng(markers[i].lat,  markers[i].lng),
+    function showMarker() {
+      for(let i = 0; i < markersAll.length; i++){
+        markersAll[i].clientMarker = new google.maps.Marker({
+            position: new google.maps.LatLng(markersAll[i].lat,  markersAll[i].lng),
             map: map,
-            title: markers[i].name,
+            title: markersAll[i].name,
             icon: "markers/marker.svg"
           });
-          addWindow(markers[i]);
+          addWindow(markersAll[i]);
       }
     };
 
@@ -306,16 +312,17 @@ function initMap(position){
       }
       markersAll.forEach(e => {
         if(e.name === btn.parentElement.innerText){
-          console.log('====================================');
-          console.log(e);
-          console.log('====================================');
-          e.clientMarker.setMap(null);
           markersAll = markersAll.filter(el => el != e);
           btn.parentElement.remove();
+          deleteMarker(e.clientMarker)
         }
       })
     })
 
+    function deleteMarker(marker){
+      marker.setMap(null);
+      marker = null;
+    }
 }
 
 
