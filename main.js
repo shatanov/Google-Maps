@@ -314,7 +314,8 @@ function initMap(position){
         if(e.name === btn.parentElement.innerText){
           markersAll = markersAll.filter(el => el != e);
           btn.parentElement.remove();
-          deleteMarker(e.clientMarker)
+          let deleteMarkerItem = e.indexOf(e.clientMarker);
+          deleteMarker(deleteMarkerItem)
         }
       })
     })
